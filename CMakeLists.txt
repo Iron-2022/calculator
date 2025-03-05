@@ -14,6 +14,12 @@ qt_add_executable(QmlApp
   main.cpp
 )
 
+qt_add_resources(QmlApp_RESOURCES
+    PREFIX "/new/prefix1"
+    FILES
+        res.qrc  # Убедитесь, что файл существует в папке проекта!
+)
+
 # Добавляем файлы qml
 qt_add_qml_module(QmlApp
     URI path      # ссылка, по которой будут загружаться файлы qml
@@ -22,6 +28,7 @@ qt_add_qml_module(QmlApp
     SOURCES counter.h counter.cpp
     SOURCES
     SOURCES historymodel.h historymodel.cpp
+    RESOURCES res.qrc
 )
 
 target_link_libraries(QmlApp
