@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import counter
+import History
 
 Window {
     id: mainWindow
@@ -13,8 +14,13 @@ Window {
     property real buttonSizeFactor: mainWindow.width / 280
     property string textContent: calculator.textContent // Свойство для хранения текста
 
+    DataModel {
+        id: historyModel
+    }
+
     Counter {
         id: calculator
+        historyModel: historyModel
     }
     ColumnLayout{
         anchors.bottom: parent.bottom
@@ -22,6 +28,11 @@ Window {
         ListView {
             Layout.fillWidth: true
             Layout.preferredHeight: 100
+            model: historyModel
+            delegate: Text {
+                        text: itemData
+                        font.pixelSize: 14
+                    }
         }
 
         Text{

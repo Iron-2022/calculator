@@ -9,24 +9,16 @@ QString Calculator::textContent() const {
 void Calculator::handleButton(const QString &buttonText) {
     if(buttonText == "="){
         m_secondOperand = text_content.toDouble();
-        setTextContent("");
+        double result = 0;
+
+        if(m_operation == "+") result = m_firstOperand + m_secondOperand;
+        else if(m_operation == "-") result = m_firstOperand - m_secondOperand;
+        else if(m_operation == "*") result = m_firstOperand * m_secondOperand;
+        else if(m_operation == "/") result = m_firstOperand / m_secondOperand;
+
+        setTextContent(QString::number(result));
+        addHistoryEntry(m_firstOperand, m_operation, m_secondOperand, result);
         m_waitingForOperand = true;
-        if (m_operation == "+"){
-            double otvet = m_firstOperand + m_secondOperand;
-            setTextContent(QString::number(otvet));
-        }
-        else if (m_operation == "-"){
-            double otvet = m_firstOperand - m_secondOperand;
-            setTextContent(QString::number(otvet));
-        }
-        else if (m_operation == "*"){
-            double otvet = m_firstOperand * m_secondOperand;
-            setTextContent(QString::number(otvet));
-        }
-        else if (m_operation == "/"){
-            double otvet = m_firstOperand / m_secondOperand;
-            setTextContent(QString::number(otvet));
-        }
     }else if (buttonText == "%") {
         // Вычисляем процент от текущего числа
         double value = text_content.toDouble(); // Получаем текущее число

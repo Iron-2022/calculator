@@ -1,3 +1,6 @@
+#ifndef HISTORYMODEL_H
+#define HISTORYMODEL_H
+
 #include <QAbstractListModel>
 #include <QList>
 #include <QVariant>
@@ -25,3 +28,5 @@ private:
         DataRole = Qt::UserRole + 1
     };
 };
+
+#endif
