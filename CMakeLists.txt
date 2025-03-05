@@ -21,6 +21,7 @@ qt_add_qml_module(QmlApp
     QML_FILES main.qml
     SOURCES counter.h counter.cpp
     SOURCES
+    SOURCES historymodel.h historymodel.cpp
 )
 
 target_link_libraries(QmlApp
