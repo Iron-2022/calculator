@@ -8,7 +8,7 @@ Window {
     width: 360
     height: 640
     visible: true
-    title: qsTr("Hello World")
+    title: qsTr("calculator")
 
     property real buttonSizeFactor: mainWindow.width / 280
     property string textContent: calculator.textContent // Свойство для хранения текста
