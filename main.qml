@@ -1,8 +1,9 @@
-import QtQuick
-import QtQuick.Layouts
-import QtQuick.Controls
-import counter
-import History
+import QtQuick 2.15
+import QtQuick.Layouts 1.3
+import QtQuick.Controls 2.15
+import QtQuick.Window 2.15
+import counter 1.0
+import History 1.0
 
 Window {
     id: mainWindow
@@ -82,9 +83,6 @@ Window {
                 text: "/"
                 font.pixelSize: 12 * buttonSizeFactor
                 background: Rectangle { color: "#FFDEAD" } // Light Goldenrod Yellow
-                /*onClicked: {
-                    // Логика для деления
-                }*/
                 onClicked: calculator.handleButton(text);
             }
         }
@@ -130,9 +128,6 @@ Window {
                 text: "*"
                 font.pixelSize: 12 * buttonSizeFactor
                 background: Rectangle { color: "#FFDEAD" } // Light Goldenrod Yellow
-                /*onClicked: {
-                    // Логика для умножения
-                }*/
                 onClicked: calculator.handleButton(text);
             }
         }
@@ -178,9 +173,6 @@ Window {
                 text: "-"
                 font.pixelSize: 12 * buttonSizeFactor
                 background: Rectangle { color: "#FFDEAD" } // Light Goldenrod Yellow
-                /*onClicked: {
-                    // Логика для вычитания
-                }*/
                 onClicked: calculator.handleButton(text);
             }
         }
@@ -226,9 +218,6 @@ Window {
                 text: "+"
                 font.pixelSize: 12 * buttonSizeFactor
                 background: Rectangle { color: "#FFDEAD" } // Light Goldenrod Yellow
-                /*onClicked: {
-                    // Логика для сложения
-                }*/
                 onClicked: calculator.handleButton(text);
             }
         }
@@ -262,9 +251,6 @@ Window {
                 text: "="
                 font.pixelSize: 12 * buttonSizeFactor
                 background: Rectangle { color: "#FFDEAD" } // Light Goldenrod Yellow
-                /*onClicked: {
-                    // Логика для вычисления результата
-                }*/
                 onClicked: calculator.handleButton(text);
             }
         }
