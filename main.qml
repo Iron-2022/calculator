@@ -54,7 +54,7 @@ Window {
             Layout.fillHeight: true
             Layout.preferredHeight: 60
             text: calculator.textContent
-            font.pixelSize: 20 * buttonWidthFactor
+            font.pixelSize: 10 * buttonWidthFactor
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignVCenter
         }

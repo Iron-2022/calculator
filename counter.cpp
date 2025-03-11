@@ -4,6 +4,10 @@
 #include <stdexcept>
 #include <vector>
 
+bool symbolic_correctness(std::string stroka){
+    return (stroka != "e" && stroka != "+" && stroka != "-" && stroka != "*" && stroka != "/");
+}
+
 double evaluateExpression(const std::string& expression) {
     std::istringstream stream(expression);
     std::vector<double> values;
@@ -15,13 +19,13 @@ double evaluateExpression(const std::string& expression) {
 
     // Читаем первое число
     stream >> str;
-    if (str != "e" && str != "+" && str != "-" && str != "*" && str != "/") values.push_back(std::stod(str));
+    if (symbolic_correctness(str)) values.push_back(std::stod(str));
     else throw std::runtime_error("Не верный формат выражения");
 
     while (stream >> op) {
         // Читаем следующее число
         stream >> str;
-        if (str != "e" && str != "+" && str != "-" && str != "*" && str != "/") num = std::stod(str);
+        if (symbolic_correctness(str)) num = std::stod(str);
         else throw std::runtime_error("Не верный формат выражения");
         operators.push_back(op);
         values.push_back(num);
