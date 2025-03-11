@@ -23,21 +23,16 @@ public:
     DataModel* historyModel() const { return m_historyModel; }
 
 public slots:
-    void handleButton(const QString &buttonText);
+    void handleButton();
 signals:
     void textContentChanged();
     void historyModelChanged();
 private:
     DataModel* m_historyModel = nullptr;
     QString text_content;
-    double m_firstOperand;
-    double m_secondOperand;
-    QString m_operation;
-    bool m_waitingForOperand;
-    void addHistoryEntry(double first, const QString& op, double second, double result) {
+    void addHistoryEntry(const QString &stroka) {
         if(m_historyModel) {
-            QString entry = QString("%1 %2 %3 = %4").arg(first).arg(op).arg(second).arg(result);
-            m_historyModel->addItem(entry);
+            m_historyModel->addItem(stroka);
         }
     }
 };

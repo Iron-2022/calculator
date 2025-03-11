@@ -1,58 +1,83 @@
 #include "counter.h"
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <stdexcept>
+#include <vector>
 
-Calculator::Calculator(QObject *parent) : QObject(parent), text_content("0"), m_firstOperand(0),m_secondOperand(0), m_waitingForOperand(true) {}
+double evaluateExpression(const std::string& expression) {
+    std::istringstream stream(expression);
+    std::vector<double> values;
+    std::vector<char> operators;
+
+    double num;
+    char op;
+    std::string str;
+
+    // Читаем первое число
+    stream >> str;
+    if (str != "e" && str != "+" && str != "-" && str != "*" && str != "/") values.push_back(std::stod(str));
+    else throw std::runtime_error("Не верный формат выражения");
+
+    while (stream >> op) {
+        // Читаем следующее число
+        stream >> str;
+        if (str != "e") num = std::stod(str);
+        else throw std::runtime_error("Не верный формат выражения");
+        operators.push_back(op);
+        values.push_back(num);
+    }
+
+    // Обрабатываем операторы в порядке их приоритета
+    for (size_t i = 0; i < operators.size(); ++i) {
+        char currentOp = operators[i];
+        if (currentOp == '*' || currentOp == '/') {
+            double left = values[i];
+            double right = values[i + 1];
+            if (currentOp == '/' && right == 0)throw std::runtime_error("Не верный формат выражения");
+            double result = (currentOp == '*') ? left * right : left / right;
+            values[i] = result;
+            values.erase(values.begin() + i + 1);
+            operators.erase(operators.begin() + i);
+            --i;  // Уменьшаем индекс, так как мы изменили размер вектора
+        }
+    }
+
+    // Теперь обрабатываем оставшиеся операции
+    double result = values[0];
+    for (size_t i = 0; i < operators.size(); ++i) {
+        char currentOp = operators[i];
+        double right = values[i + 1];
+        switch (currentOp){
+        case '+':
+            result += right;
+            break;
+        case '-':
+            result -= right;
+            break;
+        case '%':
+            result = result * (right / 100.0);
+            break;
+        }
+    }
+    return result;
+}
+
+Calculator::Calculator(QObject *parent) : QObject(parent), text_content("0") {}
 
 QString Calculator::textContent() const {
     return text_content;
 }
 
-void Calculator::handleButton(const QString &buttonText) {
-    if(buttonText == "="){
-        m_secondOperand = text_content.toDouble();
-        double result = 0;
-
-        if(m_operation == "+") result = m_firstOperand + m_secondOperand;
-        else if(m_operation == "-") result = m_firstOperand - m_secondOperand;
-        else if(m_operation == "*") result = m_firstOperand * m_secondOperand;
-        else if(m_operation == "/") result = m_firstOperand / m_secondOperand;
-
-        setTextContent(QString::number(result));
-        addHistoryEntry(m_firstOperand, m_operation, m_secondOperand, result);
-        m_waitingForOperand = true;
-    }else if (buttonText == "%") {
-        // Вычисляем процент от текущего числа
-        double value = text_content.toDouble(); // Получаем текущее число
-        double percent = value / 100.0;        // Вычисляем процент
-        setTextContent(QString::number(percent)); // Обновляем текст
-    }else{
-        m_operation = buttonText;
-        if(m_waitingForOperand){
-            m_firstOperand = text_content.toDouble();
-            setTextContent("");
-            m_waitingForOperand = false;
-        }else{
-            m_secondOperand = text_content.toDouble();
-            setTextContent("");
-            m_waitingForOperand = true;
-        }
-        if(m_waitingForOperand){
-            if (m_operation == "+"){
-                double otvet = m_firstOperand + m_secondOperand;
-                setTextContent(QString::number(otvet));
-            }
-            else if (m_operation == "-"){
-                double otvet = m_firstOperand -  m_secondOperand;
-                setTextContent(QString::number(otvet));
-            }
-            else if (m_operation == "*"){
-                double otvet = m_firstOperand * m_secondOperand;
-                setTextContent(QString::number(otvet));
-            }
-            else if (m_operation == "/"){
-                double otvet = m_firstOperand / m_secondOperand;
-                setTextContent(QString::number(otvet));
-            }
-        }
+void Calculator::handleButton() {
+    try{
+        text_content += " e";
+        QString result = QString::number(evaluateExpression(text_content.toStdString()));
+        text_content.remove(text_content.length() - 1, 1);
+        addHistoryEntry(text_content + "= " + result);
+        setTextContent(result);
+    }catch (const std::exception& e){
+        setTextContent(e.what());
     }
 }
 

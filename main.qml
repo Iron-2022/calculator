@@ -9,10 +9,13 @@ Window {
     id: mainWindow
     width: 360
     height: 640
+    minimumWidth: 360
+    minimumHeight: 640
     visible: true
     title: qsTr("calculator")
 
-    property real buttonSizeFactor: mainWindow.width / 280
+    property real buttonWidthFactor: mainWindow.width / 280
+    property real buttonHeightFactor: mainWindow.height / 640
     property string textContent: calculator.textContent // Свойство для хранения текста
 
     DataModel {
@@ -24,44 +27,55 @@ Window {
         historyModel: historyModel
     }
     ColumnLayout{
+        spacing: 10 * buttonWidthFactor
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         ListView {
+            id: listView
             Layout.fillWidth: true
-            Layout.preferredHeight: 100
+            Layout.fillHeight: true
+            Layout.preferredHeight: 60 * buttonHeightFactor
             model: historyModel
+            clip: true  // Это свойство обрезает элементы, выходящие за пределы видимости
             delegate: Text {
                         text: itemData
                         font.pixelSize: 14
                     }
+            // Добавляем вертикальный ScrollBar
+                    ScrollBar.vertical: ScrollBar {
+                        id: vbar
+                        width: 10
+                        policy: ScrollBar.AlwaysOn
+                    }
         }
-
         Text{
             id: displayText
             Layout.fillWidth: true
-            Layout.preferredHeight: 40
+            Layout.fillHeight: true
+            Layout.preferredHeight: 60
             text: calculator.textContent
-            font.pixelSize: 20 * buttonSizeFactor
+            font.pixelSize: 20 * buttonWidthFactor
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignVCenter
         }
         RowLayout {
             Layout.fillWidth: true
+            Layout.fillHeight: true
             Button {
-                Layout.preferredWidth: 60 * buttonSizeFactor
-                Layout.preferredHeight: 40 * buttonSizeFactor
+                Layout.preferredWidth: 60 * buttonWidthFactor
+                Layout.preferredHeight: 60 * buttonHeightFactor
                 text: "C"
-                font.pixelSize: 12 * buttonSizeFactor
+                font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#808080" } // Grey
                 onClicked: {
                     calculator.textContent = "0"  // Сброс текста
                 }
             }
             Button {
-                Layout.preferredWidth: 60 * buttonSizeFactor
-                Layout.preferredHeight: 40 * buttonSizeFactor
+                Layout.preferredWidth: 60 * buttonWidthFactor
+                Layout.preferredHeight: 60 * buttonHeightFactor
                 text: "+/-"
-                font.pixelSize: 12 * buttonSizeFactor
+                font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#808080" } // Grey
                 onClicked: {
                     if (calculator.textContent !== "0") {
@@ -70,30 +84,31 @@ Window {
                 }
             }
             Button {
-                Layout.preferredWidth: 60 * buttonSizeFactor
-                Layout.preferredHeight: 40 * buttonSizeFactor
+                Layout.preferredWidth: 60 * buttonWidthFactor
+                Layout.preferredHeight: 60 * buttonHeightFactor
                 text: "%"
-                font.pixelSize: 12 * buttonSizeFactor
+                font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#808080" } // Grey
-                onClicked: calculator.handleButton(text);
+                onClicked: {calculator.textContent += " % "}
             }
             Button {
-                Layout.preferredWidth: 60 * buttonSizeFactor
-                Layout.preferredHeight: 40 * buttonSizeFactor
+                Layout.preferredWidth: 60 * buttonWidthFactor
+                Layout.preferredHeight: 60 * buttonHeightFactor
                 text: "/"
-                font.pixelSize: 12 * buttonSizeFactor
+                font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#FFDEAD" } // Light Goldenrod Yellow
-                onClicked: calculator.handleButton(text);
+                onClicked: {calculator.textContent += " / "}
             }
         }
 
         RowLayout {
             Layout.fillWidth: true
+            Layout.fillHeight: true
             Button {
-                Layout.preferredWidth: 60 * buttonSizeFactor
-                Layout.preferredHeight: 40 * buttonSizeFactor
+                Layout.preferredWidth: 60 * buttonWidthFactor
+                Layout.preferredHeight: 60 * buttonHeightFactor
                 text: "1"
-                font.pixelSize: 12 * buttonSizeFactor
+                font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#ADD8E6" } // Light Blue
                 onClicked: {
                     if (calculator.textContent === "0") calculator.textContent = "1"
@@ -101,10 +116,10 @@ Window {
                 }
             }
             Button {
-                Layout.preferredWidth: 60 * buttonSizeFactor
-                Layout.preferredHeight: 40 * buttonSizeFactor
+                Layout.preferredWidth: 60 * buttonWidthFactor
+                Layout.preferredHeight: 60 * buttonHeightFactor
                 text: "2"
-                font.pixelSize: 12 * buttonSizeFactor
+                font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#ADD8E6" } // Light Blue
                 onClicked: {
                     if (calculator.textContent === "0") calculator.textContent = "2"
@@ -112,10 +127,10 @@ Window {
                 }
             }
             Button {
-                Layout.preferredWidth: 60 * buttonSizeFactor
-                Layout.preferredHeight: 40 * buttonSizeFactor
+                Layout.preferredWidth: 60 * buttonWidthFactor
+                Layout.preferredHeight: 60 * buttonHeightFactor
                 text: "3"
-                font.pixelSize: 12 * buttonSizeFactor
+                font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#ADD8E6" } // Light Blue
                 onClicked: {
                     if (calculator.textContent === "0") calculator.textContent = "3"
@@ -123,22 +138,23 @@ Window {
                 }
             }
             Button {
-                Layout.preferredWidth: 60 * buttonSizeFactor
-                Layout.preferredHeight: 40 * buttonSizeFactor
+                Layout.preferredWidth: 60 * buttonWidthFactor
+                Layout.preferredHeight: 60 * buttonHeightFactor
                 text: "*"
-                font.pixelSize: 12 * buttonSizeFactor
+                font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#FFDEAD" } // Light Goldenrod Yellow
-                onClicked: calculator.handleButton(text);
+                onClicked: {calculator.textContent += " * "}
             }
         }
 
         RowLayout {
             Layout.fillWidth: true
+            Layout.fillHeight: true
             Button {
-                Layout.preferredWidth: 60 * buttonSizeFactor
-                Layout.preferredHeight: 40 * buttonSizeFactor
+                Layout.preferredWidth: 60 * buttonWidthFactor
+                Layout.preferredHeight: 60 * buttonHeightFactor
                 text: "4"
-                font.pixelSize: 12 * buttonSizeFactor
+                font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#ADD8E6" } // Light Blue
                 onClicked: {
                     if (calculator.textContent === "0") calculator.textContent = "4"
@@ -146,10 +162,10 @@ Window {
                 }
             }
             Button {
-                Layout.preferredWidth: 60 * buttonSizeFactor
-                Layout.preferredHeight: 40 * buttonSizeFactor
+                Layout.preferredWidth: 60 * buttonWidthFactor
+                Layout.preferredHeight: 60 * buttonHeightFactor
                 text: "5"
-                font.pixelSize: 12 * buttonSizeFactor
+                font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#ADD8E6" } // Light Blue
                 onClicked: {
                     if (calculator.textContent === "0") calculator.textContent = "5"
@@ -157,10 +173,10 @@ Window {
                 }
             }
             Button {
-                Layout.preferredWidth: 60 * buttonSizeFactor
-                Layout.preferredHeight: 40 * buttonSizeFactor
+                Layout.preferredWidth: 60 * buttonWidthFactor
+                Layout.preferredHeight: 60 * buttonHeightFactor
                 text: "6"
-                font.pixelSize: 12 * buttonSizeFactor
+                font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#ADD8E6" } // Light Blue
                 onClicked: {
                     if (calculator.textContent === "0") calculator.textContent = "6"
@@ -168,22 +184,23 @@ Window {
                 }
             }
             Button {
-                Layout.preferredWidth: 60 * buttonSizeFactor
-                Layout.preferredHeight: 40 * buttonSizeFactor
+                Layout.preferredWidth: 60 * buttonWidthFactor
+                Layout.preferredHeight: 60 * buttonHeightFactor
                 text: "-"
-                font.pixelSize: 12 * buttonSizeFactor
+                font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#FFDEAD" } // Light Goldenrod Yellow
-                onClicked: calculator.handleButton(text);
+                onClicked: {calculator.textContent += " - "}
             }
         }
 
         RowLayout {
             Layout.fillWidth: true
+            Layout.fillHeight: true
             Button {
-                Layout.preferredWidth: 60 * buttonSizeFactor
-                Layout.preferredHeight: 40 * buttonSizeFactor
+                Layout.preferredWidth: 60 * buttonWidthFactor
+                Layout.preferredHeight: 60 * buttonHeightFactor
                 text: "7"
-                font.pixelSize: 12 * buttonSizeFactor
+                font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#ADD8E6" } // Light Blue
                 onClicked: {
                     if (calculator.textContent === "0") calculator.textContent = "7"
@@ -191,10 +208,10 @@ Window {
                 }
             }
             Button {
-                Layout.preferredWidth: 60 * buttonSizeFactor
-                Layout.preferredHeight: 40 * buttonSizeFactor
+                Layout.preferredWidth: 60 * buttonWidthFactor
+                Layout.preferredHeight: 60 * buttonHeightFactor
                 text: "8"
-                font.pixelSize: 12 * buttonSizeFactor
+                font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#ADD8E6" } // Light Blue
                 onClicked: {
                     if (calculator.textContent === "0") calculator.textContent = "8"
@@ -202,10 +219,10 @@ Window {
                 }
             }
             Button {
-                Layout.preferredWidth: 60 * buttonSizeFactor
-                Layout.preferredHeight: 40 * buttonSizeFactor
+                Layout.preferredWidth: 60 * buttonWidthFactor
+                Layout.preferredHeight: 60 * buttonHeightFactor
                 text: "9"
-                font.pixelSize: 12 * buttonSizeFactor
+                font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#ADD8E6" } // Light Blue
                 onClicked: {
                     if (calculator.textContent === "0") calculator.textContent = "9"
@@ -213,45 +230,46 @@ Window {
                 }
             }
             Button {
-                Layout.preferredWidth: 60 * buttonSizeFactor
-                Layout.preferredHeight: 40 * buttonSizeFactor
+                Layout.preferredWidth: 60 * buttonWidthFactor
+                Layout.preferredHeight: 60 * buttonHeightFactor
                 text: "+"
-                font.pixelSize: 12 * buttonSizeFactor
+                font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#FFDEAD" } // Light Goldenrod Yellow
-                onClicked: calculator.handleButton(text);
+                onClicked: {calculator.textContent += " + "}
             }
         }
 
         RowLayout {
             Layout.fillWidth: true
+            Layout.fillHeight: true
             Button {
-                Layout.preferredWidth: 125 * buttonSizeFactor
-                Layout.preferredHeight: 40 * buttonSizeFactor
+                Layout.preferredWidth: 125 * buttonWidthFactor
+                Layout.preferredHeight: 60 * buttonHeightFactor
                 Layout.columnSpan: 2
                 text: "0"
-                font.pixelSize: 12 * buttonSizeFactor
+                font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#ADD8E6" } // Light Blue
                 onClicked: {
                     if (calculator.textContent !== "0") calculator.textContent += "0"
                 }
             }
             Button {
-                Layout.preferredWidth: 60 * buttonSizeFactor
-                Layout.preferredHeight: 40 * buttonSizeFactor
+                Layout.preferredWidth: 60 * buttonWidthFactor
+                Layout.preferredHeight: 60 * buttonHeightFactor
                 text: "."
-                font.pixelSize: 12 * buttonSizeFactor
+                font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#ADD8E6" } // Light Blue
                 onClicked: {
                     if (!calculator.textContent.includes(".")) calculator.textContent += "."
                 }
             }
             Button {
-                Layout.preferredWidth: 60 * buttonSizeFactor
-                Layout.preferredHeight: 40 * buttonSizeFactor
+                Layout.preferredWidth: 60 * buttonWidthFactor
+                Layout.preferredHeight: 60 * buttonHeightFactor
                 text: "="
-                font.pixelSize: 12 * buttonSizeFactor
+                font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#FFDEAD" } // Light Goldenrod Yellow
-                onClicked: calculator.handleButton(text);
+                onClicked: calculator.handleButton();
             }
         }
     }
