@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <vector>
 
+bool symbolic_correctness(std::string str)
+
 double evaluateExpression(const std::string& expression) {
     std::istringstream stream(expression);
     std::vector<double> values;
