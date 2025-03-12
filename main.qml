@@ -17,6 +17,7 @@ Window {
     property real buttonWidthFactor: mainWindow.width / 280
     property real buttonHeightFactor: mainWindow.height / 640
     property string textContent: calculator.textContent // Свойство для хранения текста
+    property bool point: true;
 
     DataModel {
         id: historyModel
@@ -53,8 +54,8 @@ Window {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.preferredHeight: 60
-            text: calculator.textContent
-            font.pixelSize: 10 * buttonWidthFactor
+            text: calculator.textContent.length > 20 ? calculator.textContent.slice(0,20) + "..." : calculator.textContent
+            font.pixelSize: 20 * buttonWidthFactor
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignVCenter
         }
@@ -69,6 +70,7 @@ Window {
                 background: Rectangle { color: "#808080" } // Grey
                 onClicked: {
                     calculator.textContent = "0"  // Сброс текста
+                    point = true;
                 }
             }
             Button {
@@ -79,7 +81,8 @@ Window {
                 background: Rectangle { color: "#808080" } // Grey
                 onClicked: {
                     if (calculator.textContent !== "0") {
-                        calculator.textContent = calculator.textContent.startsWith("-") ? calculator.textContent.slice(1) : "-" + calculator.textContent
+                        calculator.textContent = calculator.textContent.startsWith("-") ? calculator.textContent.slice(1) : "-" + calculator.textContent;
+                        point = true;
                     }
                 }
             }
@@ -89,7 +92,7 @@ Window {
                 text: "%"
                 font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#808080" } // Grey
-                onClicked: {calculator.textContent += " % "}
+                onClicked: {calculator.textContent += " % "; point = true;}
             }
             Button {
                 Layout.preferredWidth: 60 * buttonWidthFactor
@@ -97,7 +100,7 @@ Window {
                 text: "/"
                 font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#FFDEAD" } // Light Goldenrod Yellow
-                onClicked: {calculator.textContent += " / "}
+                onClicked: {calculator.textContent += " / "; point = true;}
             }
         }
 
@@ -189,7 +192,7 @@ Window {
                 text: "-"
                 font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#FFDEAD" } // Light Goldenrod Yellow
-                onClicked: {calculator.textContent += " - "}
+                onClicked: {calculator.textContent += " - "; point = true;}
             }
         }
 
@@ -235,7 +238,7 @@ Window {
                 text: "+"
                 font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#FFDEAD" } // Light Goldenrod Yellow
-                onClicked: {calculator.textContent += " + "}
+                onClicked: {calculator.textContent += " + "; point = true}
             }
         }
 
@@ -260,7 +263,10 @@ Window {
                 font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#ADD8E6" } // Light Blue
                 onClicked: {
-                    if (!calculator.textContent.includes(".")) calculator.textContent += "."
+                    if (point){
+                        calculator.textContent += "."
+                        point = false;
+                    }
                 }
             }
             Button {
@@ -269,7 +275,10 @@ Window {
                 text: "="
                 font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#FFDEAD" } // Light Goldenrod Yellow
-                onClicked: calculator.handleButton();
+                onClicked: {
+                    calculator.handleButton();
+                    point = true;
+                }
             }
         }
     }
