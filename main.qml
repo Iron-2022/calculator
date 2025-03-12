@@ -50,16 +50,21 @@ Window {
                         policy: ScrollBar.AlwaysOn
                     }
         }
-        Text{
-            id: displayText
+        ScrollView{
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.preferredHeight: 60
-            text: calculator.textContent.length > 20 ? calculator.textContent.slice(0,20) + "..." : calculator.textContent
-            font.pixelSize: 20 * buttonWidthFactor
-            horizontalAlignment: Text.AlignRight
-            verticalAlignment: Text.AlignVCenter
+            Text{
+                id: displayText
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.preferredHeight: 60
+                text: calculator.textContent
+                font.pixelSize: 20 * buttonWidthFactor
+                horizontalAlignment: Text.AlignRight
+                verticalAlignment: Text.AlignVCenter
+            }
         }
+
         RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -82,23 +87,18 @@ Window {
                 font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#808080" } // Grey
                 onClicked: {
-                                let currentText = calculator.textContent;
-
-                                // Определяем индекс последнего символа
-                                let sizeTextMinusOne = size_text;
-
-                                // Проверяем, если текущий текст не равен "0"
-                                if (currentText !== "0") {
-                                    // Проверяем на знак "-" на позиции sizeTextMinusOne
-                                    if (currentText.charAt(sizeTextMinusOne) === '-') {
-                                        // Если знак "-" есть, удаляем его
-                                        calculator.textContent = currentText.slice(0, sizeTextMinusOne) + currentText.slice(sizeTextMinusOne + 1);
-                                    } else {
-                                        // Если знака "-" нет, добавляем его на позицию sizeTextMinusOne
-                                        calculator.textContent = currentText.slice(0, sizeTextMinusOne) + '-' + currentText.charAt(sizeTextMinusOne);
-                                    }
-                                }
-                            }
+                    let currentText = calculator.textContent;
+                    // Проверяем, если текущий текст не равен "0"
+                    if (currentText !== "0") {
+                        if (currentText.charAt(size_text) === '-') {
+                            // Если знак "-" есть, удаляем его
+                            calculator.textContent = currentText.slice(0, size_text) + currentText.slice(size_text + 1);
+                        } else {
+                            // Если знака "-" нет, добавляем его на позицию size_text
+                            calculator.textContent = currentText.slice(0, size_text) + '-' + currentText.charAt(size_text);
+                        }
+                    }
+                }
             }
             Button {
                 Layout.preferredWidth: 60 * buttonWidthFactor
