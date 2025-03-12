@@ -18,6 +18,7 @@ Window {
     property real buttonHeightFactor: mainWindow.height / 640
     property string textContent: calculator.textContent // Свойство для хранения текста
     property bool point: true;
+    property int size_text: 0;
 
     DataModel {
         id: historyModel
@@ -35,7 +36,7 @@ Window {
             id: listView
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.preferredHeight: 60 * buttonHeightFactor
+            Layout.preferredHeight: 150 * buttonHeightFactor
             model: historyModel
             clip: true  // Это свойство обрезает элементы, выходящие за пределы видимости
             delegate: Text {
@@ -71,6 +72,7 @@ Window {
                 onClicked: {
                     calculator.textContent = "0"  // Сброс текста
                     point = true;
+                    size_text = 0;
                 }
             }
             Button {
@@ -80,11 +82,23 @@ Window {
                 font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#808080" } // Grey
                 onClicked: {
-                    if (calculator.textContent !== "0") {
-                        calculator.textContent = calculator.textContent.startsWith("-") ? calculator.textContent.slice(1) : "-" + calculator.textContent;
-                        point = true;
-                    }
-                }
+                                let currentText = calculator.textContent;
+
+                                // Определяем индекс последнего символа
+                                let sizeTextMinusOne = size_text;
+
+                                // Проверяем, если текущий текст не равен "0"
+                                if (currentText !== "0") {
+                                    // Проверяем на знак "-" на позиции sizeTextMinusOne
+                                    if (currentText.charAt(sizeTextMinusOne) === '-') {
+                                        // Если знак "-" есть, удаляем его
+                                        calculator.textContent = currentText.slice(0, sizeTextMinusOne) + currentText.slice(sizeTextMinusOne + 1);
+                                    } else {
+                                        // Если знака "-" нет, добавляем его на позицию sizeTextMinusOne
+                                        calculator.textContent = currentText.slice(0, sizeTextMinusOne) + '-' + currentText.charAt(sizeTextMinusOne);
+                                    }
+                                }
+                            }
             }
             Button {
                 Layout.preferredWidth: 60 * buttonWidthFactor
@@ -92,7 +106,7 @@ Window {
                 text: "%"
                 font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#808080" } // Grey
-                onClicked: {calculator.textContent += " % "; point = true;}
+                onClicked: {calculator.textContent += " % "; point = true; size_text = calculator.textContent.length}
             }
             Button {
                 Layout.preferredWidth: 60 * buttonWidthFactor
@@ -100,7 +114,7 @@ Window {
                 text: "/"
                 font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#FFDEAD" } // Light Goldenrod Yellow
-                onClicked: {calculator.textContent += " / "; point = true;}
+                onClicked: {calculator.textContent += " / "; point = true; size_text = calculator.textContent.length}
             }
         }
 
@@ -146,7 +160,7 @@ Window {
                 text: "*"
                 font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#FFDEAD" } // Light Goldenrod Yellow
-                onClicked: {calculator.textContent += " * "}
+                onClicked: {calculator.textContent += " * "; point = true; size_text = calculator.textContent.length}
             }
         }
 
@@ -192,7 +206,7 @@ Window {
                 text: "-"
                 font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#FFDEAD" } // Light Goldenrod Yellow
-                onClicked: {calculator.textContent += " - "; point = true;}
+                onClicked: {calculator.textContent += " - "; point = true; size_text = calculator.textContent.length}
             }
         }
 
@@ -238,7 +252,7 @@ Window {
                 text: "+"
                 font.pixelSize: 12 * buttonWidthFactor
                 background: Rectangle { color: "#FFDEAD" } // Light Goldenrod Yellow
-                onClicked: {calculator.textContent += " + "; point = true}
+                onClicked: {calculator.textContent += " + "; point = true; size_text = calculator.textContent.length}
             }
         }
 

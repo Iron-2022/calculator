@@ -27,7 +27,6 @@ public slots:
 signals:
     void textContentChanged();
     void historyModelChanged();
-    void click_dot();
 private:
     DataModel* m_historyModel = nullptr;
     QString text_content;

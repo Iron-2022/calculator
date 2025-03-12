@@ -72,14 +72,6 @@ QString Calculator::textContent() const {
     return text_content;
 }
 
-
-/*void Calculator::click_dot(){
-    if(flag){
-
-    }else{
-
-    }
-}*/
 void Calculator::handleButton() {
     try{
         text_content += " e";
