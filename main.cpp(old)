@@ -1,0 +1,27 @@
+#include <QApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include <QQuickStyle>
+
+#include "counter.h"
+
+#include <KLocalizedString>
+
+int main(int argc, char *argv[])
+{
+    QQuickStyle::setStyle(QStringLiteral("RosaStyle"));
+
+    QApplication app(argc, argv);
+    KLocalizedString::setApplicationDomain("1");
+
+    QQmlApplicationEngine engine;
+    qmlRegisterType<Calculator>("counter", 1, 0,"Counter");
+    qmlRegisterType<DataModel>("History", 1, 0, "DataModel");
+
+    engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
+    engine.addImportPath(QStringLiteral("qrc:/qml"));
+    
+    engine.load(QUrl(QStringLiteral("qrc:/qml/Main.qml")));
+
+    return app.exec();
+}
