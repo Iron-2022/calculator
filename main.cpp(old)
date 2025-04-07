@@ -2,8 +2,10 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickStyle>
+#include <QtQml> // Добавляем для qmlRegisterType
 
 #include "counter.h"
+#include "datamodel.h" // Подключаем заголовочный файл DataModel
 
 #include <KLocalizedString>
 
@@ -14,10 +16,11 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     KLocalizedString::setApplicationDomain("1");
 
-    QQmlApplicationEngine engine;
-    qmlRegisterType<Calculator>("counter", 1, 0,"Counter");
+    // Регистрация C++ типов для использования в QML
+    qmlRegisterType<Calculator>("counter", 1, 0, "Counter");
     qmlRegisterType<DataModel>("History", 1, 0, "DataModel");
 
+    QQmlApplicationEngine engine;
     engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
     engine.addImportPath(QStringLiteral("qrc:/qml"));
     
