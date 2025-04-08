@@ -3,6 +3,8 @@
 #include <string>
 #include <stdexcept>
 #include <vector>
+#include <clocale>   
+std::setlocale(LC_NUMERIC,"C");
 
 bool symbolic_correctness(std::string stroka){
     return (stroka != "e" && stroka != "+" && stroka != "-" && stroka != "*" && stroka != "/");
