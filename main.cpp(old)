@@ -1,30 +1,14 @@
-#include <QApplication>
-#include <QQmlApplicationEngine>
-#include <QQmlContext>
-#include <QQuickStyle>
-#include <QtQml> // Добавляем для qmlRegisterType
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
 
-#include "counter.h"
-#include "datamodel.h" // Подключаем заголовочный файл DataModel
+import RosaTheme 1.0 as Rosa
+import RosaControls 1.0
 
-#include <KLocalizedString>
+ApplicationWindow {
+    width: Rosa.Theme.scale(360)
+    height: Rosa.Theme.scale(640)
+    color: Rosa.Theme.lightShadesBlueGrayColor
 
-int main(int argc, char *argv[])
-{
-    QQuickStyle::setStyle(QStringLiteral("RosaStyle"));
-
-    QApplication app(argc, argv);
-    KLocalizedString::setApplicationDomain("1");
-
-    // Регистрация C++ типов для использования в QML
-    qmlRegisterType<Calculator>("counter", 1, 0, "Counter");
-    qmlRegisterType<DataModel>("History", 1, 0, "DataModel");
-
-    QQmlApplicationEngine engine;
-    engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
-    engine.addImportPath(QStringLiteral("qrc:/qml"));
-    
-    engine.load(QUrl(QStringLiteral("qrc:/qml/Main.qml")));
-
-    return app.exec();
+    initialPage: getPage("qrc:/qml/InitPage.qml")    
 }
