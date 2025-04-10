@@ -1,0 +1,123 @@
+ColumnLayout {
+    spacing: 10 * buttonWidthFactor
+    anchors.fill: parent
+
+    // Компонент кнопки
+    component CalcButton: Button {
+        property alias btnColor: bg.color
+        property string textVal: ""
+        
+        Layout.preferredWidth: 60 * buttonWidthFactor
+        Layout.preferredHeight: 60 * buttonHeightFactor
+        text: textVal
+        font.pixelSize: 12 * buttonWidthFactor
+        
+        background: Rectangle {
+            id: bg
+            color: "#ADD8E6"
+        }
+    }
+
+    // История
+    ListView {
+        Layout.fillWidth: true
+        Layout.preferredHeight: 150 * buttonHeightFactor
+        model: historyModel
+        delegate: Text {
+            text: itemData
+            font.pixelSize: 14 * buttonWidthFactor
+        }
+        ScrollBar.vertical: ScrollBar { width: 10 }
+    }
+
+    // Дисплей
+    ScrollView {
+        Layout.fillWidth: true
+        Text {
+            text: calculator.textContent
+            font.pixelSize: 20 * buttonWidthFactor
+            horizontalAlignment: Text.AlignRight
+        }
+    }
+
+    // Первый ряд кнопок
+    RowLayout {
+        CalcButton { 
+            textVal: "C"; btnColor: "#808080"
+            onClicked: { calculator.textContent = "0"; point = true; size_text = 0; }
+        }
+        CalcButton { 
+            textVal: "+/-"; btnColor: "#808080"
+            onClicked: toggleSign() 
+        }
+        CalcButton { 
+            textVal: "%"; btnColor: "#808080"
+            onClicked: { addOperator("%"); }
+        }
+        CalcButton { 
+            textVal: "/"; btnColor: "#FFDEAD"
+            onClicked: { addOperator("/"); }
+        }
+    }
+
+    // Ряд с 7-9 и *
+    RowLayout {
+        CalcButton { textVal: "7"; onClicked: addDigit("7") }
+        CalcButton { textVal: "8"; onClicked: addDigit("8") }
+        CalcButton { textVal: "9"; onClicked: addDigit("9") }
+        CalcButton { textVal: "*"; btnColor: "#FFDEAD"; onClicked: { addOperator("*"); } }
+    }
+
+    // Ряд с 4-6 и -
+    RowLayout {
+        CalcButton { textVal: "4"; onClicked: addDigit("4") }
+        CalcButton { textVal: "5"; onClicked: addDigit("5") }
+        CalcButton { textVal: "6"; onClicked: addDigit("6") }
+        CalcButton { textVal: "-"; btnColor: "#FFDEAD"; onClicked: { addOperator("-"); } }
+    }
+
+    // Ряд с 1-3 и +
+    RowLayout {
+        CalcButton { textVal: "1"; onClicked: addDigit("1") }
+        CalcButton { textVal: "2"; onClicked: addDigit("2") }
+        CalcButton { textVal: "3"; onClicked: addDigit("3") }
+        CalcButton { textVal: "+"; btnColor: "#FFDEAD"; onClicked: { addOperator("+"); } }
+    }
+
+    // Последний ряд
+    RowLayout {
+        CalcButton {
+            textVal: "0"
+            Layout.preferredWidth: 125 * buttonWidthFactor
+            onClicked: { if(calculator.textContent !== "0") calculator.textContent += "0" }
+        }
+        CalcButton { 
+            textVal: "."
+            onClicked: { if(point) { calculator.textContent += "."; point = false; } }
+        }
+        CalcButton { 
+            textVal: "="; btnColor: "#FFDEAD"
+            onClicked: { calculator.handleButton(); point = true; }
+        }
+    }
+}
+
+// Общие функции
+function toggleSign() {
+    let txt = calculator.textContent;
+    if(txt !== "0") {
+        txt[size_text] === '-' ?
+            calculator.textContent = txt.slice(0, size_text) + txt.slice(size_text + 1) :
+            calculator.textContent = txt.slice(0, size_text) + '-' + txt.slice(size_text);
+    }
+}
+
+function addOperator(op) {
+    calculator.textContent += ` ${op} `;
+    point = true;
+    size_text = calculator.textContent.length;
+}
+
+function addDigit(d) {
+    calculator.textContent = calculator.textContent === "0" ? d : calculator.textContent + d;
+}
