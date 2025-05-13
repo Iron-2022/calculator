@@ -16,6 +16,8 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
+    bool initializeDatabase(); // Объявление метода
+    void loadDataFromDatabase();
 
     // Методы для работы с данными
     Q_INVOKABLE void addItem(const QVariant &item);
