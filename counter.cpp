@@ -3,14 +3,14 @@
 #include <string>
 #include <stdexcept>
 #include <vector>
-#include <clocale>   
-std::setlocale(LC_NUMERIC,"C");
+#include <clocale>
 
-bool symbolic_correctness(std::string stroka){
-    return (stroka != "e" && stroka != "+" && stroka != "-" && stroka != "*" && stroka != "/");
+bool symbolicCorrectness(const std::string& str) {
+    return (str != "e" && str != "+" && str != "-" && str != "*" && str != "/");
 }
 
 double evaluateExpression(const std::string& expression) {
+    std::setlocale(LC_NUMERIC, "C");
     std::istringstream stream(expression);
     std::vector<double> values;
     std::vector<char> operators;
@@ -21,14 +21,18 @@ double evaluateExpression(const std::string& expression) {
 
     // Читаем первое число
     stream >> str;
-    if (symbolic_correctness(str)) values.push_back(std::stod(str));
-    else throw std::runtime_error("Не верный формат выражения");
+    if (symbolicCorrectness(str))
+        values.push_back(std::stod(str));
+    else
+        throw std::runtime_error("Некорректный формат выражения");
 
     while (stream >> op) {
         // Читаем следующее число
         stream >> str;
-        if (symbolic_correctness(str)) num = std::stod(str);
-        else throw std::runtime_error("Не верный формат выражения");
+        if (symbolicCorrectness(str))
+            num = std::stod(str);
+        else
+            throw std::runtime_error("Некорректный формат выражения");
         operators.push_back(op);
         values.push_back(num);
     }
@@ -39,7 +43,8 @@ double evaluateExpression(const std::string& expression) {
         if (currentOp == '*' || currentOp == '/') {
             double left = values[i];
             double right = values[i + 1];
-            if (currentOp == '/' && right == 0)throw std::runtime_error("Не верный формат выражения");
+            if (currentOp == '/' && right == 0)
+                throw std::runtime_error("Деление на ноль");
             double result = (currentOp == '*') ? left * right : left / right;
             values[i] = result;
             values.erase(values.begin() + i + 1);
@@ -53,7 +58,7 @@ double evaluateExpression(const std::string& expression) {
     for (size_t i = 0; i < operators.size(); ++i) {
         char currentOp = operators[i];
         double right = values[i + 1];
-        switch (currentOp){
+        switch (currentOp) {
         case '+':
             result += right;
             break;
@@ -68,27 +73,28 @@ double evaluateExpression(const std::string& expression) {
     return result;
 }
 
-Calculator::Calculator(QObject *parent) : QObject(parent), text_content("0"), flag(true){}
+Calculator::Calculator(QObject *parent)
+    : QObject(parent), _textContent("0"), _flag(true) {}
 
 QString Calculator::textContent() const {
-    return text_content;
+    return _textContent;
 }
 
 void Calculator::handleButton() {
-    try{
-        text_content += " e";
-        QString result = QString::number(evaluateExpression(text_content.toStdString()));
-        text_content.remove(text_content.length() - 1, 1);
-        addHistoryEntry(text_content + "= " + result);
-        setTextContent(result);
-    }catch (const std::exception& e){
+    try {
+        _textContent += " e";
+        QString resultStr = QString::number(evaluateExpression(_textContent.toStdString()));
+        _textContent.remove(_textContent.length() - 1, 1);
+        addHistoryEntry(_textContent + "= " + resultStr);
+        setTextContent(resultStr);
+    } catch (const std::exception& e) {
         setTextContent(e.what());
     }
 }
 
 void Calculator::setTextContent(const QString &text) {
-    if (text_content != text) {
-        text_content = text;
+    if (_textContent != text) {
+        _textContent = text;
         emit textContentChanged();
     }
 }
