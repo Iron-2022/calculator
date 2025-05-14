@@ -1,5 +1,4 @@
-#ifndef HISTORYMODEL_H
-#define HISTORYMODEL_H
+#pragma once
 
 #include <QAbstractListModel>
 #include <QList>
@@ -12,23 +11,18 @@ class DataModel : public QAbstractListModel
 public:
     explicit DataModel(QObject *parent = nullptr);
 
-    // Обязательные методы QAbstractListModel
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
-    bool initializeDatabase(); // Объявление метода
-    void loadDataFromDatabase();
 
-    // Методы для работы с данными
-    Q_INVOKABLE void addItem(const QVariant &item);
-    Q_INVOKABLE QVariant get(int index) const;
-    Q_INVOKABLE void clear();
+    void addItem(const QVariant &item);
+    QVariant get(int index) const;
+    void clear();
 
 private:
-    QList<QVariant> m_data;
-    enum Roles {
-        DataRole = Qt::UserRole + 1
-    };
-};
+    bool initializeDatabase();
+    void loadDataFromDatabase();
 
-#endif
+private:
+    QVector<QString> _data;
+};
